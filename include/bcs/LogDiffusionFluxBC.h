@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include "ADIntegratedBC.h"
+#include "ADVectorIntegratedBC.h"
 
 // This boundary condition should only be used with species whose values are in the log-molar form
 
-class LogDiffusionFluxBC : public ADIntegratedBC
+class LogDiffusionFluxBC : public ADVectorIntegratedBC
 {
 public:
   static InputParameters validParams();
@@ -22,11 +22,17 @@ public:
   LogDiffusionFluxBC(const InputParameters & parameters);
 
 protected:
-  virtual ADReal computeQpResidual() override;
+  virtual ADReal computeQpResidual();
 
   Real _r_units;
 
-  Real _value;
+private:
+  /// x component function
+  const Function & _function_x;
+  /// y component function
+  const Function & _function_y;
+  /// z component function
+  const Function & _function_z;
 
   const ADMaterialProperty<Real> & _diffusivity;
   ADMaterialProperty<Real> _user_diff;
