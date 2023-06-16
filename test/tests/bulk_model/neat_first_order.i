@@ -1,7 +1,8 @@
-dom0Scale = 1.0
+dom0Scale = 1e-6
 
 [GlobalParams]
   # offset = 20
+  # cant use offset with the kernels used
   use_moles = true
   # converts density from #/m^3 to moles/m^3
   # mol/m^3 = mM
@@ -10,7 +11,7 @@ dom0Scale = 1.0
 [Mesh]
   type = GeneratedMesh
   nx = 1000
-  xmax = 1e-6 
+  xmax = 1
   # boundary layer thickness of 1 um
   dim = 1
 []
@@ -30,14 +31,16 @@ dom0Scale = 1.0
   type = Transient
   end_time = 10
   steady_state_detection = true
+  automatic_scaling = true
   petsc_options = '-snes_converged_reason -snes_linesearch_monitor'
-  solve_type = PJFNK
+  solve_type = newton
   petsc_options_iname = '-pc_type -pc_factor_shift_type -pc_factor_shift_amount'
   petsc_options_value = 'lu NONZERO 1.e-10'
-  nl_rel_tol = 1e-4
-  nl_abs_tol = 7.6e-5
+  nl_rel_tol = 1e-7
+  nl_abs_tol = 1e-7
   dtmin = 1e-15
   l_max_its = 20
+  scheme = crank-nicolson
   [TimeStepper]
     type = IterationAdaptiveDT
     cutback_factor = 0.4
@@ -109,8 +112,9 @@ dom0Scale = 1.0
 [BCs]
   [emliq_left]
     type = NeumannBC
-    value = 0.0104
+    value = 1.04e4
     # this is in moles/m2*s given a 1000 A/m2 current density
+    # 0.0104 divided by the scale length, 1e-6
     # F = 96485
     variable = em
     boundary = left
