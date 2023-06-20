@@ -110,7 +110,7 @@ dom0Scale = 1e-6
 []
 
 [BCs]
-  [emliq_left]
+  [em_left]
     type = NeumannBC
     value = 1.04e4
     # this is in moles/m2*s given a 1000 A/m2 current density
@@ -118,6 +118,20 @@ dom0Scale = 1e-6
     # F = 96485
     variable = em
     boundary = left
+  []
+  [em_rightFix]
+    type = DirichletBC
+    value = -25
+    variable = em
+    boundary = right
+    # pinning the right
+  []
+  [em_rightZeroFlux]
+    type = NeumannBC
+    value = 0
+    variable = em
+    boundary = right
+    # pinning the right
   []
   # shouldnt need right boundary condition if default is flux = 0
 []
